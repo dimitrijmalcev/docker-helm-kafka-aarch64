@@ -1,0 +1,64 @@
+{{range $i, $e := until (.Values.brokerCount |int) }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: "kafka-{{ $i }}"
+spec:
+  selector:
+    matchLabels:
+      app: kafka
+  serviceName: "kafka-{{ $i }}"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kafka
+        brokerId: "{{ $i }}"
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: "kafka"
+        image: malcev/private:kafka-2.8-16
+        command: ["/bin/sh"]
+        args: ["-c", "rm -rf /var/kafka/lost+found && /entrypoint.sh"]
+        ports:
+        - containerPort: 9092
+          name: kafka
+        - containerPort: 9093
+          name: controller
+        env:
+        - name: KAFKA_ADVERTISED_PORT
+          value: "9092"
+        - name: KAFKA_CLUSTER_ID
+          value: oh-sxaDRTcyAr6pFRbXyzA
+        - name: KAFKA_CONTROLLER_QUORUM_VOTERS
+          value: 0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
+        - name: KAFKA_ADVERTISED_HOST_NAME
+          value: "kafka-{{ $i }}.default.svc.cluster.local"
+        - name: KAFKA_BROKER_ID
+          value: "{{ $i }}"
+        - name: KAFKA_LOGS_DIR
+          value: /var/kafka
+        - name: ALLOW_PLAINTEXT_LISTENER
+          value: "yes"
+        - name: KAFKA_CONTROLLER_LISTENERS
+          value: "CONTROLLER://kafka-{{ $i }}.default.svc.cluster.local:9093"
+        - name: KAFKA_LISTENERS
+          value: "PLAINTEXT://kafka-{{ $i }}.default.svc.cluster.local:9092"
+        volumeMounts:
+        - name: kafkavolume
+          mountPath: /var/kafka
+  volumeClaimTemplates:
+  - metadata:
+      name: kafkavolume
+    spec:
+        storageClassName: nfs-client
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+{{end}}

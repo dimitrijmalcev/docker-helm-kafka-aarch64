@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka
+  labels:
+    app: kafka
+spec:
+  ports:
+  - port: 9092
+    name: kafka
+  - port: 9093
+    name: kafka-controller
+  clusterIP: None
+  selector:
+    app: kafka
+{{range $i, $e := until (.Values.brokerCount |int) }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "kafka-{{ $i }}"
+  labels:
+    app: kafka
+    brokerId: "{{ $i }}"
+spec:
+  ports:
+  - port: 9092
+    name: kafka
+  - port: 9093
+    name: controller
+  clusterIP: None
+  selector:
+    app: kafka
+    brokerId: "{{ $i }}"
+{{end}}

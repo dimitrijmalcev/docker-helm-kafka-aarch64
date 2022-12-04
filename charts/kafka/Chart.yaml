@@ -1,0 +1,18 @@
+annotations:
+  category: Infrastructure
+apiVersion: v2
+appVersion: 2.8.0
+dependencies:
+description: Apache Kafka is a distributed streaming platform.
+keywords:
+- kafka
+- streaming
+- producer
+- consumer
+maintainers:
+- email: dimitrij.malcev@gmail.com
+  name: Dimitrij Malcev
+name: kafka
+sources:
+- https://kafka.apache.org/
+version: 1.0.0
