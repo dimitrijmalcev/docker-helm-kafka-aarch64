@@ -1,11 +1,11 @@
-# (by Dimitrij Malcev) Docker and Helm Chart for kafka on ARM (aarch64) architecture
+# Docker and Helm Chart for kafka on ARM (aarch64) architecture by Dimitrij Malcev 
 
 Provides a Dockerfile and a basic helm chart for Kafka usage on aarch64 architecture (for example on a raspberry pi version 4) for development purposes by Dimitrij Malcev.
 
 # Build 
 
-`cd build`
-`docker buildx build --platform linux/arm64 -t <tag> .`
+- `cd build`
+- `docker buildx build --platform linux/arm64 -t <tag> .`
 
 # Deployment
 
