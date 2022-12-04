@@ -11,7 +11,7 @@ Provides a Dockerfile and a basic helm chart for Kafka usage on aarch64 architec
 
 Information: no zookeeper is needed for this deployment since this kafka version works without zookeeper
 
-Please customize the following `templates/kafka-statefulset.yaml`:
+Please customize the following values in `templates/kafka-statefulset.yaml`:
 
 - `image` 
 - `KAFKA_CONTROLLER_LISTENERS`
